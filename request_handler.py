@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
-from views import get_all_entries, get_single_entry
+from views import get_all_entries, get_single_entry, update_entry
 from views import delete_entry, get_entries_by_search, create_journal_entry
 from views import get_all_moods
 
@@ -193,8 +193,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         success = False
 
-        if resource == "animals":
-            success = update_animal(id, post_body)
+        if resource == "entries":
+            success = update_entry(id, post_body)
         # rest of the elif's
 
         if success:
