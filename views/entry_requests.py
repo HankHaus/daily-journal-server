@@ -75,3 +75,45 @@ def get_all_entries():
     # Q: I have no idea what the hell this line does
     # A:
     return json.dumps(entries)
+
+def get_single_entry(id):
+    """_summary_
+
+    Args:
+        id (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            e.id,
+            e.concept,
+            e.entry,
+            e.date,
+            e.mood_id
+        FROM entry e
+        WHERE e.id = ?
+        """, ( id, ))
+        # Q: what is happening with the "( id, )" part of the code block above?
+        # A:
+
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+        # location = Location(data['location_id'], data['location_name'], data['location_address'])
+
+        # customer = Customer(data['customer_id'], data['customer_name'], data['customer_address'])
+
+        # Create an animal instance from the current row
+        entry = Entry(data['id'], data['concept'], data['entry'],
+                            data['date'], data['mood_id'])
+
+
+
+        return json.dumps(entry.__dict__)
