@@ -124,7 +124,7 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_all_employees()}"
 
         # Response from parse_url() is a tuple with 3
-        # items in it, which means the request was for
+        # items in it, which means the requestwas for
         # `/resource?parameter=value`
         elif len(parsed) == 3:
             ( resource, key, value ) = parsed
