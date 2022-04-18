@@ -1,7 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
-from views import get_all_entries, get_single_entry
+from views import get_all_entries, get_single_entry, delete_entry
+from views import get_all_moods
 
 class HandleRequests(BaseHTTPRequestHandler):
 
@@ -106,11 +107,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_entry(id)}"
                 else:
                     response = f"{get_all_entries()}"
-            elif resource == "customers":
+            elif resource == "moods":
                 if id is not None:
                     response = f"{get_single_customer(id)}"
                 else:
-                    response = f"{get_all_customers()}"
+                    response = f"{get_all_moods()}"
             elif resource == "locations":
                 if id is not None:
                     response = f"{get_single_location(id)}"
@@ -237,8 +238,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
     # Delete a single animal from the list
-        if resource == "animals":
-            delete_animal(id)
+        if resource == "entries":
+            delete_entry(id)
 
         if resource == "locations":
             delete_location(id)

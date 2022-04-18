@@ -77,6 +77,7 @@ def get_all_entries():
     return json.dumps(entries)
 
 def get_single_entry(id):
+
     """_summary_
 
     Args:
@@ -117,3 +118,17 @@ def get_single_entry(id):
 
 
         return json.dumps(entry.__dict__)
+
+def delete_entry(id):
+    """_summary_
+
+    Args:
+        id (_type_): _description_
+    """
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM Entry
+        WHERE id = ?
+        """, (id, ))
