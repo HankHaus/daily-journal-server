@@ -175,3 +175,38 @@ def get_entries_by_search(text):
             entries.append(entry.__dict__)
 
     return json.dumps(entries)
+
+def create_journal_entry(new_entry):
+    """_summary_
+
+    Args:
+        new_animal (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Entry
+            ( concept, entry, date, mood_id )
+        VALUES
+            ( ?, ?, ?, ?);
+        """, (new_entry['concept'], new_entry['entry'],
+            new_entry['date'], new_entry['moodId'], ))
+# Q: do the question marks mean that whatever the client sends as those values is what will be used?
+# A:
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the animal dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_entry['id'] = id
+
+
+    return json.dumps(new_entry)
