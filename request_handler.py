@@ -1,7 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
-from views import get_all_entries, get_single_entry, delete_entry, get_entries_by_search
+from views import get_all_entries, get_single_entry
+from views import delete_entry, get_entries_by_search, create_journal_entry
 from views import get_all_moods
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -167,42 +168,18 @@ class HandleRequests(BaseHTTPRequestHandler):
         resource = self.parse_url(self.path)[0]
 
         # Initialize new animal
-        new_animal = None
+        new_entry = None
 
         # Add a new animal to the list. Don't worry about
         # the orange squiggle, you'll define the create_animal
         # function next.
-        if resource == "animals":
-            new_animal = create_animal(post_body)
+        if resource == "entries":
+            new_entry = create_journal_entry(post_body)
 
         # Encode the new animal and send in response
         # Q: what is .encode() doing?
         # A: encode enables us to send the new_animal fstring back to the client
-        self.wfile.write(f"{new_animal}".encode())
-
-        new_employee = None
-
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
-        if resource == "employees":
-            new_employee = create_employee(post_body)
-
-        # Encode the new animal and send in response
-        # Q: what is wfile?
-        # A: part of converting it to be able to send to the client
-        self.wfile.write(f"{new_employee}".encode())
-
-        new_customer = None
-
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
-        if resource == "customers":
-            new_customer = create_customer(post_body)
-
-        # Encode the new animal and send in response
-        self.wfile.write(f"{new_customer}".encode())
+        self.wfile.write(f"{new_entry}".encode())
 
     def do_PUT(self):
         """_summary_
