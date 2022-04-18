@@ -1,6 +1,7 @@
 import sqlite3
 import json
 from models import Entry
+from models import Mood
 
 def get_all_entries():
     """_summary_
@@ -33,8 +34,11 @@ def get_all_entries():
             e.concept,
             e.entry,
             e.date,
-            e.mood_id
+            e.mood_id,
+            m.label
         FROM Entry e
+        JOIN Mood m
+            ON m.id = e.mood_id
         """)
 
         # Initialize an empty list to hold all animal representations
@@ -56,9 +60,12 @@ def get_all_entries():
 # query for each of these, but I'm unsure what row['name'] is linked to, or 'status'
 # is it connnected to the a.name and a.status in the sql query?
 # A:
+            mood = Mood(row['mood_id'], row['label'])
             entry = Entry(row['id'], row['concept'], row['entry'], row['date'],
                             row['mood_id'])
 
+
+            entry.mood = mood.__dict__
 
 # does this line add the location/customer
 # dictionary that was joined in the sql query to the current animal instance?
@@ -77,7 +84,6 @@ def get_all_entries():
     return json.dumps(entries)
 
 def get_single_entry(id):
-
     """_summary_
 
     Args:
@@ -134,7 +140,14 @@ def delete_entry(id):
         """, (id, ))
 
 def get_entries_by_search(text):
-    
+    """_summary_
+
+    Args:
+        text (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     with sqlite3.connect("./dailyjournal.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
         db_cursor = conn.cursor()
