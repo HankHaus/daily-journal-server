@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
-from views import get_all_entries, get_single_entry, update_entry
+from views import get_all_entries, get_single_entry, update_entry, get_all_tags
 from views import delete_entry, get_entries_by_search, create_journal_entry
 from views import get_all_moods
 
@@ -113,11 +113,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = f"{get_single_customer(id)}"
                 else:
                     response = f"{get_all_moods()}"
-            elif resource == "locations":
+            elif resource == "tags":
                 if id is not None:
                     response = f"{get_single_location(id)}"
                 else:
-                    response = f"{get_all_locations()}"
+                    response = f"{get_all_tags()}"
             elif resource == "employees":
                 if id is not None:
                     response = f"{get_single_employee(id)}"
