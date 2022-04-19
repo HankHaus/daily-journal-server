@@ -48,6 +48,18 @@ def get_all_entries():
         #Q: which rows of data is this converting?
         # A:
         dataset = db_cursor.fetchall()
+        db_cursor.execute("""
+        SELECT
+            et.id,
+            et.entry_id,
+            et.tag_id,
+            t.label tag_label              
+        FROM EntryTags et
+        JOIN Tags t
+            ON et.tag_id = t.id
+        """)
+
+        entry_tags = db_cursor.fetchall()
 
         # Iterate list of data returned from database
         for row in dataset:
@@ -66,6 +78,13 @@ def get_all_entries():
 
 
             entry.mood = mood.__dict__
+
+            tags = []
+            for et_row in entry_tags:
+                if et_row["entry_id"] == row["id"]:
+                    tags.append(et_row["tag_id"])
+
+            entry.tags = tags
 
 # does this line add the location/customer
 # dictionary that was joined in the sql query to the current animal instance?
@@ -202,6 +221,15 @@ def create_journal_entry(new_entry):
         # the primary key of the last thing that got added to
         # the database.
         id = db_cursor.lastrowid
+
+
+        for i, entry_tag in enumerate(new_entry["tags"]):
+            db_cursor.execute("""
+                INSERT INTO EntryTag
+                    ( entry_id, tag_id )
+                VALUES
+                    ( ?, ? );
+                """, (id, entry_tag ))
 
         # Add the `id` property to the animal dictionary that
         # was sent by the client so that the client sees the
