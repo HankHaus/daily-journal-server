@@ -53,9 +53,9 @@ def get_all_entries():
             et.id,
             et.entry_id,
             et.tag_id,
-            t.label tag_label              
-        FROM EntryTags et
-        JOIN Tags t
+            t.name tag_label              
+        FROM EntryTag et
+        JOIN Tag t
             ON et.tag_id = t.id
         """)
 
